@@ -6,9 +6,7 @@
   <title>Erica Pong</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
-
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -17,10 +15,8 @@
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-          colors: {
-            accent: '#a78bfa'
-          }
+          fontFamily: { sans: ['Inter', 'system-ui'] },
+          colors: { accent: '#a78bfa' }
         }
       }
     }
@@ -28,30 +24,28 @@
 
   <style>
     body {
-      background: #0a0e17;
-      color: #e2e8f0;
+      background: #f8fafc;
+      color: #0f172a;
       transition: background .3s, color .3s;
     }
 
-    .light body {
-      background: #f8fafc;
-      color: #0f172a;
-    }
-    * {
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    h1, h2, h3 {
-      letter-spacing: -0.02em;
+    html.dark body {
+      background: #0a0e17;
+      color: #e2e8f0;
     }
 
     .card {
-      background: rgba(17,24,39,.65);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.8);
+      border: 1px solid rgba(0,0,0,.08);
       border-radius: 1.25rem;
       padding: 1.75rem;
+      backdrop-filter: blur(14px);
       transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    html.dark .card {
+      background: rgba(17,24,39,.65);
+      border-color: rgba(255,255,255,.08);
     }
 
     .card:hover {
@@ -63,19 +57,14 @@
       height: 420px;
       border-radius: 1.25rem;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,.08);
-      z-index: 0;
     }
 
-    /* 🔥 ACTUALLY VISIBLE GLOW MARKERS */
     .glow-marker {
       width: 12px;
       height: 12px;
       background: #a78bfa;
       border-radius: 50%;
-      box-shadow:
-        0 0 12px rgba(167,139,250,1),
-        0 0 28px rgba(167,139,250,.8);
+      box-shadow: 0 0 12px rgba(167,139,250,1), 0 0 28px rgba(167,139,250,.8);
       position: relative;
     }
 
@@ -89,22 +78,23 @@
     }
 
     @keyframes pulse {
-      0%   { transform: scale(.4); opacity: .9; }
-      100% { transform: scale(1.5); opacity: 0; }
+      from { transform: scale(.4); opacity: .9; }
+      to { transform: scale(1.5); opacity: 0; }
     }
 
-    /* Dock */
     .dock {
-      background: rgba(17,24,39,.75);
-      backdrop-filter: blur(18px);
+      background: rgba(255,255,255,.75);
       border-radius: 1.25rem;
-      border: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(18px);
+    }
+
+    html.dark .dock {
+      background: rgba(17,24,39,.75);
     }
 
     .dock-item {
-      position: relative;
       padding: .5rem .75rem;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       transition: transform .2s ease;
     }
 
@@ -119,24 +109,25 @@
       padding: 2px 6px;
       border-radius: 6px;
       background: rgba(0,0,0,.8);
+      color: white;
       opacity: 0;
-      white-space: nowrap;
-      transition: opacity .15s ease;
+      transition: opacity .15s;
     }
 
     .dock-item:hover .dock-label { opacity: 1; }
 
-    /* TECH STACK FIXED */
     .tech-marquee {
       display: flex;
       width: max-content;
       animation: techScroll 30s linear infinite;
+      overflow: visible; 
     }
 
     .tech-row {
       display: flex;
       gap: 3rem;
       padding-right: 3rem;
+      overflow: visible; 
     }
 
     .tech-card {
@@ -147,18 +138,22 @@
       border-radius: 1.25rem;
       border: 1px solid rgba(255,255,255,.08);
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: .5rem;
-      box-shadow: 0 0 30px rgba(167,139,250,.15);
-      font-weight: 500;
-      letter-spacing: -0.01em;
-      transition: transform .25s ease;
+      overflow: visible;
     }
 
-    .tech-card:hover {
-      transform: scale(1.1);
+    .tech-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .tech-card:hover .tech-inner {
+      transform: translateY(-6px) scale(1.12);
+      box-shadow: 0 20px 40px rgba(167,139,250,.25);
     }
 
     .tech-card img {
@@ -171,20 +166,23 @@
       opacity: .9;
     }
 
-    @keyframes techScroll {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
+    html.dark .tech-card {
+      background: rgba(17,24,39,.65);
+      border-color: rgba(255,255,255,.08);
     }
 
-    .tech-marquee:hover {
-      animation-play-state: paused;
+    .tech-card:hover { transform: scale(1.1); }
+
+    @keyframes techScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
     }
   </style>
 </head>
 
 <body class="antialiased font-sans tracking-tight">
 
-<!-- hero -->
+
 <section class="relative min-h-screen flex items-center justify-center text-center px-6 overflow-hidden">
 
   <div class="absolute inset-0 -z-10">
@@ -197,7 +195,6 @@
 
   <div class="max-w-3xl">
 
-    <!-- status -->
     <div class="inline-flex items-center gap-2 px-4 py-1.5 mb-8
                 rounded-full border border-white/10
                 bg-white/5 backdrop-blur-md text-sm opacity-80">
@@ -285,44 +282,66 @@
 <section id="tech" class="px-6 py-24">
   <h2 class="text-4xl font-bold mb-12 text-center">Tech Stack</h2>
 
-  <div class="relative overflow-hidden max-w-6xl mx-auto">
+  <div class="tech-wrapper max-w-6xl mx-auto">
     <div class="tech-marquee">
 
       <div class="tech-row">
         <div class="tech-card">
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg">
-          <span>JavaScript</span>
+          <div class="tech-inner">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg">
+            <span>JavaScript</span>
+          </div>
         </div>
+
         <div class="tech-card">
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg">
-          <span>TypeScript</span>
+          <div class="tech-inner">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg">
+            <span>TypeScript</span>
+          </div>
         </div>
+
         <div class="tech-card">
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg">
-          <span>Python</span>
+          <div class="tech-inner">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg">
+            <span>Python</span>
+          </div>
         </div>
+
         <div class="tech-card">
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg">
-          <span>Java</span>
+          <div class="tech-inner">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg">
+            <span>Java</span>
+          </div>
         </div>
       </div>
 
       <div class="tech-row">
         <div class="tech-card">
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg">
-          <span>JavaScript</span>
+          <div class="tech-inner">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg">
+            <span>JavaScript</span>
+          </div>
         </div>
+
         <div class="tech-card">
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg">
-          <span>TypeScript</span>
+          <div class="tech-inner">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg">
+            <span>TypeScript</span>
+          </div>
         </div>
+
         <div class="tech-card">
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg">
-          <span>Python</span>
+          <div class="tech-inner">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg">
+            <span>Python</span>
+          </div>
         </div>
+
         <div class="tech-card">
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg">
-          <span>Java</span>
+          <div class="tech-inner">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg">
+            <span>Java</span>
+          </div>
         </div>
       </div>
 
