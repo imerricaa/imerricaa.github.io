@@ -6,7 +6,9 @@
   <title>Erica Pong</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -15,7 +17,7 @@
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { sans: ['Inter', 'system-ui'] },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
           colors: { accent: '#a78bfa' }
         }
       }
@@ -23,29 +25,33 @@
   </script>
 
   <style>
+    * { font-family: 'Inter', system-ui, sans-serif; }
+
     body {
-      background: #f8fafc;
-      color: #0f172a;
+      background: #0a0e17;
+      color: #e2e8f0;
       transition: background .3s, color .3s;
     }
 
-    html.dark body {
-      background: #0a0e17;
-      color: #e2e8f0;
+    html:not(.dark) body {
+      background: #f8fafc;
+      color: #0f172a;
     }
 
+    h1, h2, h3 { letter-spacing: -0.02em; }
+
     .card {
-      background: rgba(255,255,255,.8);
-      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(17,24,39,.65);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,.08);
       border-radius: 1.25rem;
       padding: 1.75rem;
-      backdrop-filter: blur(14px);
       transition: transform .25s ease, box-shadow .25s ease;
     }
 
-    html.dark .card {
-      background: rgba(17,24,39,.65);
-      border-color: rgba(255,255,255,.08);
+    html:not(.dark) .card {
+      background: rgba(255,255,255,.75);
+      border-color: rgba(0,0,0,.08);
     }
 
     .card:hover {
@@ -53,10 +59,99 @@
       box-shadow: 0 20px 40px rgba(167,139,250,.15);
     }
 
+    .dock {
+      background: rgba(17,24,39,.75);
+      backdrop-filter: blur(18px);
+      border-radius: 1.25rem;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    html:not(.dark) .dock {
+      background: rgba(255,255,255,.85);
+      border-color: rgba(0,0,0,.1);
+    }
+
+    .dock-item {
+      position: relative;
+      padding: .5rem .75rem;
+      font-size: 1.1rem;
+      transition: transform .2s ease;
+    }
+
+    .dock-item:hover { transform: translateY(-4px) scale(1.15); }
+
+    .dock-label {
+      position: absolute;
+      bottom: 120%;
+      font-size: .65rem;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(0,0,0,.8);
+      color: white;
+      opacity: 0;
+      white-space: nowrap;
+      transition: opacity .15s ease;
+    }
+
+    .dock-item:hover .dock-label { opacity: 1; }
+
+    .tech-viewport {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tech-track {
+      display: flex;
+      width: max-content;
+      animation: techMove 35s linear infinite;
+    }
+
+    .tech-group {
+      display: flex;
+      gap: 3rem;
+      padding-right: 3rem;
+    }
+
+    .tech-card {
+      width: 140px;
+      height: 120px;
+      background: rgba(17,24,39,.65);
+      backdrop-filter: blur(14px);
+      border-radius: 1.25rem;
+      border: 1px solid rgba(255,255,255,.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      box-shadow: 0 0 30px rgba(167,139,250,.15);
+      transition: transform .25s ease;
+    }
+
+    html:not(.dark) .tech-card {
+      background: rgba(255,255,255,.75);
+      border-color: rgba(0,0,0,.08);
+    }
+
+    .tech-card:hover { transform: scale(1.08); }
+
+    .tech-card img { width: 42px; height: 42px; }
+    .tech-card span { font-size: .85rem; opacity: .9; }
+
+    @keyframes techMove {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .tech-viewport:hover .tech-track {
+      animation-play-state: paused;
+    }
+
     #map {
       height: 420px;
       border-radius: 1.25rem;
       overflow: hidden;
+      border: 1px solid rgba(255,255,255,.08);
     }
 
     .glow-marker {
@@ -78,110 +173,39 @@
     }
 
     @keyframes pulse {
-      from { transform: scale(.4); opacity: .9; }
-      to { transform: scale(1.5); opacity: 0; }
+      0% { transform: scale(.4); opacity: .9; }
+      100% { transform: scale(1.5); opacity: 0; }
     }
 
-    .dock {
-      background: rgba(255,255,255,.75);
-      border-radius: 1.25rem;
+    .topbar {
+      background: rgba(17, 24, 39, 0.75); 
       backdrop-filter: blur(18px);
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: background .3s, border-color .3s;
     }
 
-    html.dark .dock {
-      background: rgba(17,24,39,.75);
-    }
-
-    .dock-item {
-      padding: .5rem .75rem;
-      font-size: 1.1rem;
-      transition: transform .2s ease;
-    }
-
-    .dock-item:hover {
-      transform: translateY(-4px) scale(1.15);
-    }
-
-    .dock-label {
-      position: absolute;
-      bottom: 120%;
-      font-size: .65rem;
-      padding: 2px 6px;
-      border-radius: 6px;
-      background: rgba(0,0,0,.8);
-      color: white;
-      opacity: 0;
-      transition: opacity .15s;
-    }
-
-    .dock-item:hover .dock-label { opacity: 1; }
-
-    .tech-marquee {
-      display: flex;
-      width: max-content;
-      animation: techScroll 30s linear infinite;
-      overflow: visible; 
-    }
-
-    .tech-row {
-      display: flex;
-      gap: 3rem;
-      padding-right: 3rem;
-      overflow: visible; 
-    }
-
-    .tech-card {
-      min-width: 140px;
-      height: 120px;
-      background: rgba(17,24,39,.65);
-      backdrop-filter: blur(14px);
-      border-radius: 1.25rem;
-      border: 1px solid rgba(255,255,255,.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: visible;
-    }
-
-    .tech-inner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: .5rem;
-      transition: transform .25s ease, box-shadow .25s ease;
-    }
-
-    .tech-card:hover .tech-inner {
-      transform: translateY(-6px) scale(1.12);
-      box-shadow: 0 20px 40px rgba(167,139,250,.25);
-    }
-
-    .tech-card img {
-      width: 42px;
-      height: 42px;
-    }
-
-    .tech-card span {
-      font-size: .85rem;
-      opacity: .9;
-    }
-
-    html.dark .tech-card {
-      background: rgba(17,24,39,.65);
-      border-color: rgba(255,255,255,.08);
-    }
-
-    .tech-card:hover { transform: scale(1.1); }
-
-    @keyframes techScroll {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
+    html:not(.dark) .topbar {
+      background: rgba(255, 255, 255, 0.85); 
+      border-color: rgba(0, 0, 0, 0.1);
     }
   </style>
 </head>
 
-<body class="antialiased font-sans tracking-tight">
-
+<body class="antialiased tracking-tight">
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 z-50">
+  <div class="topbar flex items-center gap-4 px-5 py-3 shadow-xl">
+    <a href="https://github.com/imerricaa" target="_blank" class="topbar-item">
+      GitHub
+    </a>
+    <a href="https://linkedin.com/in/imerricaa" target="_blank" class="topbar-item">
+      LinkedIn
+    </a>
+    <a href="mailto:riricapong@gmail.com" class="topbar-item">
+      Email
+    </a>
+  </div>
+</nav>
 
 <section class="relative min-h-screen flex items-center justify-center text-center px-6 overflow-hidden">
 
@@ -194,7 +218,6 @@
   </div>
 
   <div class="max-w-3xl">
-
     <div class="inline-flex items-center gap-2 px-4 py-1.5 mb-8
                 rounded-full border border-white/10
                 bg-white/5 backdrop-blur-md text-sm opacity-80">
@@ -202,19 +225,22 @@
       available for internships
     </div>
 
-    <h1 class="text-6xl md:text-7xl font-bold tracking-tight mb-6">
+    <h1 class="text-6xl md:text-7xl font-bold mb-6">
       Hi, I’m <span class="text-accent">Erica</span>
     </h1>
 
-    <p class="text-xl md:text-2xl opacity-80 leading-relaxed mb-12">
+    <p class="text-xl md:text-2xl opacity-80 mb-12">
       ai junior @ mpu<br/>
       currently doomscrolling · occasionally building cool things
     </p>
+  </div>
+</section>
 
-    <div class="flex justify-center mt-16 opacity-60">
-      <span class="animate-bounce text-sm">scroll ↓</span>
-    </div>
-
+<section id="education" class="max-w-5xl mx-auto px-6 py-24">
+  <h2 class="text-4xl font-bold mb-12 text-center">Education</h2>
+  <div class="card">
+    <h3 class="text-xl font-semibold">Macao Polytechnic University</h3>
+    <p class="text-accent text-sm">BSc in Artificial Intelligence · 2023–2027</p>
   </div>
 </section>
 
@@ -224,54 +250,31 @@
     <div class="card">
       <h3 class="text-xl font-semibold">Intern @ GSO</h3>
       <p class="text-accent text-sm">Melco · Jun–Jul 2025</p>
-      <p class="mt-4 text-gray-300">
-        Enhanced smartphone lifecycle management and gained hands-on
-        experience with ServiceNow incident workflows.
-      </p>
+      <p class="mt-4 text-gray-300">Enhanced smartphone lifecycle management and gained hands-on experience with ServiceNow incident workflows.</p>
     </div>
-
     <div class="card">
       <h3 class="text-xl font-semibold">Robotics Teaching Assistant</h3>
       <p class="text-accent text-sm">BAOBAO · 2024</p>
-      <p class="mt-4 text-gray-300">
-        Taught block-based coding, sensors, and robotics fundamentals
-        using Scratch, micro:bit, and LEGO platforms.
-      </p>
+      <p class="mt-4 text-gray-300">Taught block-based coding, sensors, and robotics fundamentals using Scratch, micro:bit, and LEGO platforms.</p>
     </div>
   </div>
 </section>
 
 <section id="projects" class="px-6 py-24">
   <h2 class="text-4xl font-bold mb-12 text-center">Selected Projects</h2>
-
   <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
     <div class="card">
       <h3 class="text-xl font-semibold mb-2">Craftscape HK</h3>
-      <p class="text-sm text-gray-400 mb-4">
-        AI + AR platform preserving Hong Kong traditional crafts
-        through generative design.
-      </p>
-      <p class="text-sm mb-4">
-        React · Gemini · AR.js
-      </p>
-      <a href="#" class="text-accent text-sm hover:underline">
-        Source / Demo →
-      </a>
+      <p class="text-sm text-gray-400 mb-4">AI + AR platform preserving Hong Kong traditional crafts through generative design.</p>
+      <p class="text-sm mb-4">React · Gemini · AR.js</p>
+      <a href="#" class="text-accent text-sm hover:underline">Source / Demo →</a>
     </div>
-
     <div class="card">
       <h3 class="text-xl font-semibold mb-2">Cantonese Truth or Dare</h3>
-      <p class="text-sm text-gray-400 mb-4">
-        Cultural question generator with web and mobile versions.
-      </p>
-      <p class="text-sm mb-4">
-        React Native · TypeScript
-      </p>
-      <a href="#" class="text-accent text-sm hover:underline">
-        Source →
-      </a>
+      <p class="text-sm text-gray-400 mb-4">Cultural question generator with web and mobile versions.</p>
+      <p class="text-sm mb-4">React Native · TypeScript</p>
+      <a href="#" class="text-accent text-sm hover:underline">Source →</a>
     </div>
-
     <div class="card">
       <h3 class="text-xl font-semibold mb-2">Next Project</h3>
       <p class="text-sm text-gray-400">Coming soon…</p>
@@ -281,79 +284,27 @@
 
 <section id="tech" class="px-6 py-24">
   <h2 class="text-4xl font-bold mb-12 text-center">Tech Stack</h2>
-
-  <div class="tech-wrapper max-w-6xl mx-auto">
-    <div class="tech-marquee">
-
-      <div class="tech-row">
-        <div class="tech-card">
-          <div class="tech-inner">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg">
-            <span>JavaScript</span>
-          </div>
-        </div>
-
-        <div class="tech-card">
-          <div class="tech-inner">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg">
-            <span>TypeScript</span>
-          </div>
-        </div>
-
-        <div class="tech-card">
-          <div class="tech-inner">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg">
-            <span>Python</span>
-          </div>
-        </div>
-
-        <div class="tech-card">
-          <div class="tech-inner">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg">
-            <span>Java</span>
-          </div>
-        </div>
+  <div class="tech-viewport max-w-7xl mx-auto">
+    <div class="tech-track">
+      <div class="tech-group">
+        <div class="tech-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"><span>JavaScript</span></div>
+        <div class="tech-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"><span>TypeScript</span></div>
+        <div class="tech-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"><span>Python</span></div>
+        <div class="tech-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg"><span>Java</span></div>
       </div>
-
-      <div class="tech-row">
-        <div class="tech-card">
-          <div class="tech-inner">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg">
-            <span>JavaScript</span>
-          </div>
-        </div>
-
-        <div class="tech-card">
-          <div class="tech-inner">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg">
-            <span>TypeScript</span>
-          </div>
-        </div>
-
-        <div class="tech-card">
-          <div class="tech-inner">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg">
-            <span>Python</span>
-          </div>
-        </div>
-
-        <div class="tech-card">
-          <div class="tech-inner">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg">
-            <span>Java</span>
-          </div>
-        </div>
+      <div class="tech-group">
+        <div class="tech-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"><span>JavaScript</span></div>
+        <div class="tech-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"><span>TypeScript</span></div>
+        <div class="tech-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"><span>Python</span></div>
+        <div class="tech-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg"><span>Java</span></div>
       </div>
-
     </div>
   </div>
 </section>
 
 <section id="interests" class="max-w-5xl mx-auto px-6 py-24">
   <h2 class="text-4xl font-bold mb-12 text-center">Places</h2>
-  <div class="card">
-    <div id="map"></div>
-  </div>
+  <div class="card"><div id="map"></div></div>
 </section>
 
 <footer class="py-16 text-center text-gray-500 border-t border-gray-800">
@@ -363,51 +314,38 @@
 
 <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
   <div class="dock flex gap-2 px-4 py-3 shadow-xl">
+    <a href="#education" class="dock-item">edu<span class="dock-label">Education</span></a>
     <a href="#professional" class="dock-item">exp<span class="dock-label">Work</span></a>
     <a href="#projects" class="dock-item">proj<span class="dock-label">Projects</span></a>
-    <a href="#tech" class="dock-item">stack<span class="dock-label">Tech</span>
-    </a>
+    <a href="#tech" class="dock-item">stack<span class="dock-label">Tech</span></a>
     <a href="#interests" class="dock-item">places<span class="dock-label">Places</span></a>
     <button id="themeToggle" class="dock-item">mode<span class="dock-label">Theme</span></button>
   </div>
 </nav>
 
 <script>
-  const map = L.map('map', {
-    center: [15, 20],
-    zoom: 2,
-    zoomControl: false
-  });
+  const map = L.map('map', { center: [15, 20], zoom: 2, zoomControl: false });
+  let tile;
 
-  L.tileLayer(
-    'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    { attribution: '' }
-  ).addTo(map);
+  function setMapTheme() {
+    if (tile) tile.remove();
+    tile = L.tileLayer(
+      document.documentElement.classList.contains('dark')
+        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+        : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+    ).addTo(map);
+  }
 
-  const places = [
-    [22.3193,114.1694],   
-    [13.7563,100.5018],   
-    [10.2899,103.9840],   
-    [51.5072,-0.1276],    
-    [40.7128,-74.0060]    
-  ];
+  setMapTheme();
 
-  places.forEach(p => {
-    L.marker(p, {
-      icon: L.divIcon({
-        html: '<div class="glow-marker"></div>',
-        className: '',
-        iconSize: [40,40],
-        iconAnchor: [20,20]
-      })
-    }).addTo(map);
-  });
-</script>
+  [[22.3193,114.1694],[13.7563,100.5018],[10.2899,103.9840],[51.5072,-0.1276],[40.7128,-74.0060]]
+    .forEach(p => L.marker(p,{icon:L.divIcon({html:'<div class="glow-marker"></div>',className:'',iconSize:[40,40],iconAnchor:[20,20]})}).addTo(map));
 
-<script>
   document.getElementById('themeToggle').onclick = () => {
     document.documentElement.classList.toggle('dark');
+    setMapTheme();
   };
 </script>
+
 </body>
 </html>
